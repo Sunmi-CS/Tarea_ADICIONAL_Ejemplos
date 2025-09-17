@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Mascotas{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'pets/css/styles.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1><a href="{% url 'pet_list' %}">🐾 Mascotería</a></h1>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">Hecho con Django • CRUD de Mascotas</div>
+  </footer>
+</body>
+</html>

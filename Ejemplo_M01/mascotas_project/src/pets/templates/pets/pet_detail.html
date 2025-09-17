@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ pet.name }}{% endblock %}
+
+{% block content %}
+  <article class="card">
+    <h2>{{ pet.name }} {% if pet.adopted %}<span class="badge">Adoptado</span>{% endif %}</h2>
+    <p class="muted">{{ pet.get_species_display }} • {{ pet.breed }} • Edad: {{ pet.age }}</p>
+    <p>{{ pet.description }}</p>
+
+    <div class="meta">
+      <a href="{% url 'pet_update' pet.pk %}">Editar</a> |
+      <a href="{% url 'pet_delete' pet.pk %}">Eliminar</a> |
+      <a href="{% url 'pet_list' %}">Volver</a>
+    </div>
+  </article>
+{% endblock %}

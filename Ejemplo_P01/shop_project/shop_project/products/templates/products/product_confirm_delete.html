@@ -1,0 +1,6 @@
+{% load static %}
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Eliminar</title></head><body>
+  <h1>¿Eliminar "{{ product.name }}"?</h1>
+  <form method="post">{% csrf_token %}<button>Si, eliminar</button></form>
+  <a href="{% url 'product_list' %}">Cancelar</a>
+</body></html>

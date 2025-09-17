@@ -1,0 +1,7 @@
+body{font-family:Arial;margin:20px;background:#f7f7f7;color:#222}
+h1{color:#2b7be4}
+a{color:#2b7be4;text-decoration:none}
+ul{list-style:none;padding:0}
+li{background:#fff;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #e6e9ee}
+form input{padding:8px;border-radius:6px;border:1px solid #ddd}
+button{background:#2b7be4;color:#fff;padding:8px 12px;border:0;border-radius:6px;cursor:pointer}

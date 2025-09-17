@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Mascotas{% endblock %}
+
+{% block content %}
+  <div class="toolbar">
+    <form method="get" class="search-form">
+      <input type="text" name="q" placeholder="Buscar por nombre, especie o raza..." value="{{ q }}">
+      <button type="submit">Buscar</button>
+    </form>
+    <a class="btn" href="{% url 'pet_create' %}">➕ Nueva Mascota</a>
+  </div>
+
+  {% if pets %}
+    <div class="grid">
+      {% for pet in pets %}
+        <article class="card">
+          <h3>{{ pet.name }} {% if pet.adopted %}<span class="badge">Adoptado</span>{% endif %}</h3>
+          <p class="muted">{{ pet.get_species_display }} • {{ pet.breed }}</p>
+          <p>{{ pet.description|truncatechars:120 }}</p>
+          <div class="meta">
+            <a href="{% url 'pet_detail' pet.pk %}">Ver</a> |
+            <a href="{% url 'pet_update' pet.pk %}">Editar</a> |
+            <a href="{% url 'pet_delete' pet.pk %}">Eliminar</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No se encontraron mascotas. <a href="{% url 'pet_create' %}">Agrega la primera</a>.</p>
+  {% endif %}
+{% endblock %}
