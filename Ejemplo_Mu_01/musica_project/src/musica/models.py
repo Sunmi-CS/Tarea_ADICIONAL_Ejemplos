@@ -1,30 +1,31 @@
 from django.db import models
 
-class Artista(models.Model):
-    nombre=models.CharField(max_length=120)
-    nacionalidad=models.CharField(max_length=80, blank=True)
+class Artist(models.Model):
+    name = models.CharField(max_length=120)
+    nationality = models.CharField(max_length=80, blank=True)
 
     def __str__(self):
-        return self.nombre
-    
+        return self.name
 
-class Musica(models.Model):
-    GENEROS_MUSICA = [
+class Song(models.Model):
+    GENRE_CHOICES = [
         ('pop','Pop'),
         ('rock','Rock'),
         ('hiphop','Hip-Hop'),
-        ('otro','Otro'),
+        ('jazz','Jazz'),
+        ('classical','Classical'),
+        ('other','Other'),
     ]
-    titulo = models.CharField(max_length=200)
-    duracion = models.PositiveIntegerField() 
-    genero = models.CharField(max_length=30, choices=GENEROS_MUSICA, default='otro')
-    artista = models.ForeignKey(Artista, on_delete=models.CASCADE, related_name='musica')
+    title = models.CharField(max_length=200)
+    duration_seconds = models.PositiveIntegerField()  # duración en segundos
+    genre = models.CharField(max_length=30, choices=GENRE_CHOICES, default='other')
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='songs')
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def duration_display(self):
+        minutes = self.duration_seconds // 60
+        seconds = self.duration_seconds % 60
+        return f"{minutes}:{seconds:02d}"
 
-    def duracion(self):
-        minutos = self.duracion_segundos // 60
-        segundos = self.duracion_segundos % 60
-        return f"{minutos}:{segundos:02d}"
-    
     def __str__(self):
-        return f"{self.titulo} - {self.artista.nombre}"
+        return f"{self.title} - {self.artist.name}"
