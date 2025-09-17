@@ -1,15 +1,15 @@
 from django import forms
-from .models import Artista, Musica
+from .models import Artist, Song
 
-class ArtistaFormulario(forms.ModelForm):
+class ArtistForm(forms.ModelForm):
     class Meta:
-        model = Artista
-        campo = ['nombre','nacionalidad']
+        model = Artist
+        fields = ['name', 'nationality']
 
-class CancionFormulario(forms.ModelForm):
+class SongForm(forms.ModelForm):
     class Meta:
-        model = Musica
-        campo = ['titulo','duracion','genero','artista']
-        complemento = {
-            'duracion':forms.NumberInput(attrs={'min': 0}),
+        model = Song
+        fields = ['title', 'duration_seconds', 'genre', 'artist']
+        widgets = {
+            'duration_seconds': forms.NumberInput(attrs={'min': 0}),
         }

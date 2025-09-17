@@ -1,62 +1,83 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Task
-from .forms import TaskForm
+from django.db.models import Q
+from .models import Artist, Song
+from .forms import ArtistForm, SongForm
 
-def task_list(request):
-    tasks = Task.objects.all()
-    
-    # Handle filtering
-    status_filter = request.GET.get('status')
-    priority_filter = request.GET.get('priority')
-    
-    if status_filter and status_filter != 'all':
-        tasks = tasks.filter(status=status_filter)
-    
-    if priority_filter and priority_filter != 'all':
-        tasks = tasks.filter(priority=priority_filter)
-    
-    context = {
-        'tasks': tasks,
-        'status_filter': status_filter,
-        'priority_filter': priority_filter,
-    }
-    
-    return render(request, 'tasks/task_list.html', context)
+# ---------- SONGS ----------
+def song_list(request):
+    q = request.GET.get('q', '').strip()
+    songs = Song.objects.select_related('artist').order_by('-created_at')
+    if q:
+        songs = songs.filter(Q(title__icontains=q) | Q(genre__icontains=q) | Q(artist__name__icontains=q))
+    context = {'songs': songs, 'q': q}
+    return render(request, 'musica/song_list.html', context)
 
-def task_create(request):
+def song_create(request):
     if request.method == 'POST':
-        form = TaskForm(request.POST)
+        form = SongForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Task created successfully!')
-            return redirect('task_list')
+            return redirect('song_list')
     else:
-        form = TaskForm()
-    
-    return render(request, 'tasks/task_form.html', {'form': form})
+        form = SongForm()
+    return render(request, 'musica/song_form.html', {'form': form, 'title': 'Crear Canción'})
 
-def task_update(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    
+def song_update(request, pk):
+    song = get_object_or_404(Song, pk=pk)
     if request.method == 'POST':
-        form = TaskForm(request.POST, instance=task)
+        form = SongForm(request.POST, instance=song)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Task updated successfully!')
-            return redirect('task_list')
+            return redirect('song_list')
     else:
-        form = TaskForm(instance=task)
-    
-    return render(request, 'tasks/task_form.html', {'form': form})
+        form = SongForm(instance=song)
+    return render(request, 'musica/song_form.html', {'form': form, 'title': 'Editar Canción'})
 
-def task_delete(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    
+def song_delete(request, pk):
+    song = get_object_or_404(Song, pk=pk)
     if request.method == 'POST':
-        task.delete()
-        messages.success(request, 'Task deleted successfully!')
-        return redirect('task_list')
-    
-    return render(request, 'tasks/task_confirm_delete.html', {'task': task})
+        song.delete()
+        return redirect('song_list')
+    return render(request, 'musica/song_confirm_delete.html', {'song': song})
 
+def song_detail(request, pk):
+    song = get_object_or_404(Song, pk=pk)
+    return render(request, 'musica/song_detail.html', {'song': song})
+
+# ---------- ARTISTS ----------
+def artist_list(request):
+    artists = Artist.objects.all().order_by('name')
+    return render(request, 'musica/artist_list.html', {'artists': artists})
+
+def artist_create(request):
+    if request.method == 'POST':
+        form = ArtistForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('artist_list')
+    else:
+        form = ArtistForm()
+    return render(request, 'musica/artist_form.html', {'form': form, 'title': 'Crear Artista'})
+
+def artist_update(request, pk):
+    artist = get_object_or_404(Artist, pk=pk)
+    if request.method == 'POST':
+        form = ArtistForm(request.POST, instance=artist)
+        if form.is_valid():
+            form.save()
+            return redirect('artist_list')
+    else:
+        form = ArtistForm(instance=artist)
+    return render(request, 'musica/artist_form.html', {'form': form, 'title': 'Editar Artista'})
+
+def artist_delete(request, pk):
+    artist = get_object_or_404(Artist, pk=pk)
+    if request.method == 'POST':
+        artist.delete()
+        return redirect('artist_list')
+    return render(request, 'musica/artist_confirm_delete.html', {'artist': artist})
+
+def artist_detail(request, pk):
+    artist = get_object_or_404(Artist, pk=pk)
+    songs = artist.songs.all()
+    return render(request, 'musica/artist_detail.html', {'artist': artist, 'songs': songs})

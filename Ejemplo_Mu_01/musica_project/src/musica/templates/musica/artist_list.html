@@ -1,0 +1,24 @@
+{% extends 'musica/base.html' %}
+{% block title %}Artistas{% endblock %}
+{% block content %}
+  <div class="toolbar">
+    <a class="btn" href="{% url 'artist_create' %}">➕ Crear Artista</a>
+  </div>
+
+  {% if artists %}
+    <ul class="list">
+      {% for a in artists %}
+        <li>
+          <strong><a href="{% url 'artist_detail' a.pk %}">{{ a.name }}</a></strong>
+          <span class="muted">({{ a.nationality }})</span>
+          <span class="small">
+            <a href="{% url 'artist_update' a.pk %}">Editar</a> |
+            <a href="{% url 'artist_delete' a.pk %}">Eliminar</a>
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay artistas aún.</p>
+  {% endif %}
+{% endblock %}

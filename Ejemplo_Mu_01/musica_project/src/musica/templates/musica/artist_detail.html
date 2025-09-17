@@ -1,0 +1,19 @@
+{% extends 'musica/base.html' %}
+{% block title %}{{ artist.name }}{% endblock %}
+{% block content %}
+  <article class="card">
+    <h2>{{ artist.name }}</h2>
+    <p class="muted">Nacionalidad: {{ artist.nationality }}</p>
+
+    <h3>🍃 Canciones</h3>
+    {% if songs %}
+      <ul>
+        {% for s in songs %}
+          <li><a href="{% url 'song_detail' s.pk %}">{{ s.title }}</a> — {{ s.get_genre_display }} — {{ s.duration_display }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Este artista no tiene canciones aún.</p>
+    {% endif %}
+  </article>
+{% endblock %}

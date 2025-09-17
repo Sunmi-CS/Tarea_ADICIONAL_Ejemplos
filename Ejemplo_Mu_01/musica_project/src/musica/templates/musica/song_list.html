@@ -1,0 +1,29 @@
+{% extends 'musica/base.html' %}
+{% block title %}Canciones{% endblock %}
+{% block content %}
+  <div class="toolbar">
+    <form method="get" class="search">
+      <input type="text" name="q" placeholder="Buscar título, género o artista..." value="{{ q }}">
+      <button type="submit">Buscar</button>
+    </form>
+    <a class="btn" href="{% url 'song_create' %}">➕ Crear Canción</a>
+  </div>
+
+  {% if songs %}
+    <div class="grid">
+      {% for s in songs %}
+        <article class="card">
+          <h3>{{ s.title }}</h3>
+          <p class="muted">{{ s.artist.name }} • {{ s.get_genre_display }} • {{ s.duration_display }}</p>
+          <div class="actions">
+            <a href="{% url 'song_detail' s.pk %}">Ver</a> |
+            <a href="{% url 'song_update' s.pk %}">Editar</a> |
+            <a href="{% url 'song_delete' s.pk %}">Eliminar</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No se encontraron canciones. <a href="{% url 'song_create' %}">Agregar primera canción</a></p>
+  {% endif %}
+{% endblock %}

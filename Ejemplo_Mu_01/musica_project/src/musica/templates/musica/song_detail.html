@@ -1,0 +1,16 @@
+{% extends 'musica/base.html' %}
+{% block title %}{{ song.title }}{% endblock %}
+{% block content %}
+  <article class="card">
+    <h2>{{ song.title }}</h2>
+    <p class="muted">Artista: <a href="{% url 'artist_detail' song.artist.pk %}">{{ song.artist.name }}</a></p>
+    <p>Género: {{ song.get_genre_display }}</p>
+    <p>Duración: {{ song.duration_display }}</p>
+    <p>Creada: {{ song.created_at|date:"d/m/Y H:i" }}</p>
+    <div class="actions">
+      <a href="{% url 'song_update' song.pk %}">Editar</a> |
+      <a href="{% url 'song_delete' song.pk %}">Eliminar</a> |
+      <a href="{% url 'song_list' %}">Volver</a>
+    </div>
+  </article>
+{% endblock %}
